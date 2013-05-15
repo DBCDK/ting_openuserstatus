@@ -1,0 +1,10 @@
+name = Ting OpenUserstatus
+description = OpenUserstatus Client
+package = Ding!
+core = 7.x
+version = 7.x-0.1-dev
+
+files[] = includes/ting_openuserstatus.admin.inc
+files[] = includes/ting_openuserstatus.request.inc
+
+dependencies[] = ting_client

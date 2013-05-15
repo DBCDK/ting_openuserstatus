@@ -1,0 +1,24 @@
+<?php
+
+module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.admin');
+
+/**
+ * Implements hook_ting_client_webservice (
+ *
+ * @see ting_client.module)
+ * */
+function ting_openuserstatus_ting_client_webservice() {
+  $ret = array();
+  $ret['openuserstatus']['class'] = ' OpenUserstatusRequest';
+  $ret['openuserstatus']['url'] = 'openuserstatus_url';
+  return $ret;
+}
+
+/**
+ * Implements hook_how_r_u();
+ *
+ * @return array
+ */
+function ting_openuserstatus_how_r_u() {
+  return array('openuserstatus' => variable_get('openuserstatus_url'));
+}
