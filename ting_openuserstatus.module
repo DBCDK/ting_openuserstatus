@@ -1,7 +1,7 @@
 <?php
 
 module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.admin');
-
+module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.request');
 /**
  * Implements hook_ting_client_webservice (
  *
@@ -9,7 +9,7 @@ module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.
  * */
 function ting_openuserstatus_ting_client_webservice() {
   $ret = array();
-  $ret['openuserstatus']['class'] = ' OpenUserstatusRequest';
+  $ret['openuserstatus']['class'] = 'OpenUserstatusRequest';
   $ret['openuserstatus']['url'] = 'openuserstatus_url';
   return $ret;
 }
