@@ -2,6 +2,7 @@
 
 module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.admin');
 module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.request');
+
 /**
  * Implements hook_ting_client_webservice (
  *
@@ -11,6 +12,7 @@ function ting_openuserstatus_ting_client_webservice() {
   $ret = array();
   $ret['openuserstatus']['class'] = 'OpenUserstatusRequest';
   $ret['openuserstatus']['url'] = 'openuserstatus_url';
+  $ret['openuserstatus']['xsdNamespace'] = array('http://oss.dbc.dk/ns/openuserstatus');
   return $ret;
 }
 
@@ -21,4 +23,130 @@ function ting_openuserstatus_ting_client_webservice() {
  */
 function ting_openuserstatus_how_r_u() {
   return array('openuserstatus' => variable_get('openuserstatus_url'));
+}
+
+/**
+ * do a userStatusRequest 
+ * @param string userId; userid for library
+ * @param string userPincode; pincode for library
+ * @param string libraryCode; 
+ * 
+ * return mixed; result of query
+ */
+function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) {
+  $params['action'] = 'getUserStatusRequest';
+  $params['userId'] = $userId;
+  $params['userPincode'] = $userPincode;
+  $params['agencyId'] = 'DK-' . $libraryCode;
+  $params['outputType'] = 'json';
+
+  $params = ting_openuserstatus_check_params($params);
+  if (isset($params['error'])) {
+    return $params;
+  }
+// no errors in parameters; do the request
+  $response = ting_openuserstatus_do_request($params);
+  $params['response'] = $response;
+
+  // more error handling
+  $error = ting_openuserstatus_check_json_response($response);
+  if ($error !== FALSE) {
+    // webservice returned an error
+    $params['error'] = $error;
+  }
+  return $params;
+}
+
+/**
+ * do a cancelOrderRequest
+ * 
+ * @param type $userId
+ * @param type $userPincode
+ * @param type $libraryCode
+ * @param array $orders [orderId, orderType]; one or more orders to cancel
+ */
+function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode, array $orders) {
+  $params['action'] = 'cancelOrderRequest';
+  $params['userId'] = $userId;
+  $params['userPincode'] = $userPincode;
+  $params['agencyID'] = 'DK-' . $libraryCode;
+  $params['outputType'] = 'json';
+
+  foreach ($orders as $order) {
+    $params['cancelOrder'][] = array(
+      'orderId' => $order['orderId'],
+      'orderType' => $order['orderType'],
+    );
+  }
+
+  // error handling
+  $params = ting_openuserstatus_check_params($params);
+  if (isset($params['error'])) {
+    return $params;
+  }
+
+  // no errors in parameters; do the request
+  $response = ting_openuserstatus_do_request($params);
+  $params['response'] = $response;
+
+  // more error handling
+  if ($params['outputType'] == 'json') {
+    $error = ting_openuserstatus_check_json_response($response);
+    if ($error !== FALSE) {
+      // webservice returned an error
+      $params['error'] = $error;
+    }
+  }
+  
+  return $params;
+}
+
+/** Check common parameters for a request to openuserstatus
+ * userId, userPincode, libraryCode MUST be set for all requests
+ *
+ * @param array $params; parameters for request
+ * @return array; $params['error'] will be set if one of required parameters is empty
+ */
+function ting_openuserstatus_check_params(array $params) {
+  if (empty($params['userId']) || empty($params['userPincode']) || empty($params['agencyId'])) {
+    $params['error'] = t('incomplete_userdata', array(), array('context' => 'ting_openuserstatus'));
+  }
+  return $params;
+}
+
+/**
+ * Check if an error was returned from webservice
+ * @param stdObject $response; the json response from webservice
+ * 
+ * possible values (@see http://openuserstatus.addi.dk/1.1/openuserstatus.xsd)
+  authentication_error
+  Service unavailable
+  Element rule violated
+  Unknown user
+  User access denied
+  User authentification failed
+ */
+function ting_openuserstatus_check_json_response($response) {
+  //check getUserStatusResponse
+  if (isset($response->getUserStatusResponse->getUserStatusError)) {
+    return $response->getUserStatusResponse->getUserStatusError;
+  }
+  //check cancelOrderResponse
+  
+  // @TODO check response for errors; return error if found
+  return FALSE;
+}
+
+// @TODO implement check_xml_response
+
+/**
+ *
+ * @param array $params; array of parameters for request
+ * @return mixed; response from webservice depending on parameter ['outputType'] 
+ */
+function ting_openuserstatus_do_request($params) {
+  $client = new ting_client_class();
+  $response = $client->do_request('openuserstatus', $params);
+
+  return $response;
 }
