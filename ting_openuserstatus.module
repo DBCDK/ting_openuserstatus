@@ -44,17 +44,7 @@ function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) 
   if (isset($params['error'])) {
     return $params;
   }
-// no errors in parameters; do the request
-  $response = ting_openuserstatus_do_request($params);
-  $params['response'] = $response;
-
-  // more error handling
-  $error = ting_openuserstatus_check_json_response($response);
-  if ($error !== FALSE) {
-    // webservice returned an error
-    $params['error'] = $error;
-  }
-  return $params;
+  return ting_openuserstatus_do_request($params);
 }
 
 /**
@@ -79,27 +69,17 @@ function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode,
     );
   }
 
-  // error handling
-  $params = ting_openuserstatus_check_params($params);
-  if (isset($params['error'])) {
-    return $params;
-  }
-
-  // no errors in parameters; do the request
-  $response = ting_openuserstatus_do_request($params);
-  $params['response'] = $response;
-
-  // more error handling
-  if ($params['outputType'] == 'json') {
-    $error = ting_openuserstatus_check_json_response($response);
-    if ($error !== FALSE) {
-      // webservice returned an error
-      $params['error'] = $error;
-    }
-  }
-  return $params;
+  return ting_openuserstatus_do_request($params);
 }
 
+/**
+ *
+ * @param string $userId; 
+ * @param string $userPincode
+ * @param string $libraryCode
+ * @param array $updateOrders
+ * @return array; 
+ */
 function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode, array $updateOrders) {
   $params['action'] = 'cancelOrderRequest';
   $params['userId'] = $userId;
@@ -109,31 +89,28 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
 
   foreach ($updateOrders as $order) {
     $params['updateOrder'][] = array(
-    'orderId' => $order['orderId'],
-    'pickupAgency' => $order['pickupAgency'],
-    'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
+      'orderId' => $order['orderId'],
+      'pickupAgency' => $order['pickupAgency'],
+      'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
+    );
+  }
+  return ting_openuserstatus_do_request($params);
+}
+
+function ting_openuserstatus_do_renew_loan($userId, $userPincode, $libraryCode, array $loanIds) {
+  $params['action'] = 'renewLoanRequest';
+  $params['userId'] = $userId;
+  $params['userPincode'] = $userPincode;
+  $params['agencyId'] = 'DK-' . $libraryCode;
+  $params['outputType'] = 'json';
+
+  foreach ($loanIds as $loan) {
+    $params['renewLoan'][] = array(
+      'orderId' => $loan['loanId'],
     );
   }
 
-  // error handling
-  $params = ting_openuserstatus_check_params($params);
-  if (isset($params['error'])) {
-    return $params;
-  }
-  
-  // no errors in parameters; do the request
-  $response = ting_openuserstatus_do_request($params);
-  $params['response'] = $response;
-
-  // more error handling
-  if ($params['outputType'] == 'json') {
-    $error = ting_openuserstatus_check_json_response($response);
-    if ($error !== FALSE) {
-      // webservice returned an error
-      $params['error'] = $error;
-    }
-  }
-  return $params;  
+  return ting_openuserstatus_do_request($params);
 }
 
 /** Check common parameters for a request to openuserstatus
@@ -174,7 +151,7 @@ function ting_openuserstatus_check_json_response($response) {
   if (isset($response->updateOrderResponse->updateOrderError)) {
     return $response->updateOrderResponse->updateOrderError;
   }
-  
+
 
   return FALSE;
 }
@@ -184,11 +161,27 @@ function ting_openuserstatus_check_json_response($response) {
 /**
  *
  * @param array $params; array of parameters for request
- * @return mixed; response from webservice depending on parameter ['outputType'] 
+ * @return array; $params enriched with response and error status
  */
 function ting_openuserstatus_do_request($params) {
+  // error handling
+  $params = ting_openuserstatus_check_params($params);
+  if (isset($params['error'])) {
+    return $params;
+  }
+
+  // no errors in parameters; do the request
   $client = new ting_client_class();
   $response = $client->do_request('openuserstatus', $params);
+  $params['response'] = $response;
 
-  return $response;
+  // more error handling
+  if ($params['outputType'] == 'json') {
+    $error = ting_openuserstatus_check_json_response($response);
+    if ($error !== FALSE) {
+      // webservice returned an error
+      $params['error'] = $error;
+    }
+  }
+  return $params;
 }
