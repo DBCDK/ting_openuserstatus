@@ -69,7 +69,7 @@ function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode,
   $params['action'] = 'cancelOrderRequest';
   $params['userId'] = $userId;
   $params['userPincode'] = $userPincode;
-  $params['agencyID'] = 'DK-' . $libraryCode;
+  $params['agencyId'] = 'DK-' . $libraryCode;
   $params['outputType'] = 'json';
 
   foreach ($orders as $order) {
