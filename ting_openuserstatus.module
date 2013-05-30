@@ -97,8 +97,43 @@ function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode,
       $params['error'] = $error;
     }
   }
-  
   return $params;
+}
+
+function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode, array $updateOrders) {
+  $params['action'] = 'cancelOrderRequest';
+  $params['userId'] = $userId;
+  $params['userPincode'] = $userPincode;
+  $params['agencyId'] = 'DK-' . $libraryCode;
+  $params['outputType'] = 'json';
+
+  foreach ($updateOrders as $order) {
+    $params['updateOrder'][] = array(
+    'orderId' => $order['orderId'],
+    'pickupAgency' => $order['pickupAgency'],
+    'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
+    );
+  }
+
+  // error handling
+  $params = ting_openuserstatus_check_params($params);
+  if (isset($params['error'])) {
+    return $params;
+  }
+  
+  // no errors in parameters; do the request
+  $response = ting_openuserstatus_do_request($params);
+  $params['response'] = $response;
+
+  // more error handling
+  if ($params['outputType'] == 'json') {
+    $error = ting_openuserstatus_check_json_response($response);
+    if ($error !== FALSE) {
+      // webservice returned an error
+      $params['error'] = $error;
+    }
+  }
+  return $params;  
 }
 
 /** Check common parameters for a request to openuserstatus
@@ -132,8 +167,15 @@ function ting_openuserstatus_check_json_response($response) {
     return $response->getUserStatusResponse->getUserStatusError;
   }
   //check cancelOrderResponse
+  if (isset($response->cancelOrderResponse->cancelOrderError)) {
+    return $response->cancelOrderResponse->cancelOrderError;
+  }
+  // check updateOrderResponse
+  if (isset($response->updateOrderResponse->updateOrderError)) {
+    return $response->updateOrderResponse->updateOrderError;
+  }
   
-  // @TODO check response for errors; return error if found
+
   return FALSE;
 }
 
