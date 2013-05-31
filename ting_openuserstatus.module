@@ -54,6 +54,7 @@ function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) 
  * @param type $userPincode
  * @param type $libraryCode
  * @param array $orders [orderId, orderType]; one or more orders to cancel
+ * @return array
  */
 function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode, array $orders) {
   $params['action'] = 'cancelOrderRequest';
@@ -94,6 +95,7 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
       'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
     );
   }
+
   return ting_openuserstatus_do_request($params);
 }
 
