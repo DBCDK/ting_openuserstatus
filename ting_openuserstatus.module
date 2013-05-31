@@ -81,7 +81,7 @@ function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode,
  * @return array; 
  */
 function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode, array $updateOrders) {
-  $params['action'] = 'cancelOrderRequest';
+  $params['action'] = 'updateOrderRequest';
   $params['userId'] = $userId;
   $params['userPincode'] = $userPincode;
   $params['agencyId'] = 'DK-' . $libraryCode;

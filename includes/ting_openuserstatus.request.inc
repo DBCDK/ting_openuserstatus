@@ -10,7 +10,34 @@ class OpenUserstatusRequest extends TingClientRequest {
   public $userPincode;
   public $agencyId;
   public $outputType;
+  protected $updateOrder;
+  protected $cancelOrder;
+  protected $renewLoan;
+  
+  public function getUpdateOrder() {
+    return $this->updateOrder;
+  }
+  
+  public function setUpdateOrder($value) {
+    $this->updateOrder = $value;
+  }
+  
+  public function setCancelOrder($value){
+    $this->cancelOrder = $value;
+  }
+  
+  public function getCancelOrder() {
+    return $this->cancelOrder;
+  }
 
+  public function getRenewLoan(){
+    return $this->renewLoan;
+  }
+  
+  public function setRenewLoan($value) {
+    $this->renewLoan = $value;
+  }
+  
   /**
    * @param null $value
    */
@@ -70,8 +97,8 @@ class OpenUserstatusRequest extends TingClientRequest {
    * @return $this
    */
   public function getRequest() {
-    $this->setParameter('action', 'getUserStatusRequest');
-    $params = array('userId', 'userPincode', 'agencyId', 'outputType');
+   // $this->setParameter('action', 'getUserStatusRequest');
+    $params = array('action', 'userId', 'userPincode', 'agencyId', 'outputType', 'updateOrder', 'renewLoan', 'cancelOrder');
     foreach ($params as $parameter) {
       $getter = 'get' . ucfirst($parameter);
       if ($value = $this->$getter()) {
