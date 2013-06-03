@@ -104,13 +104,9 @@ function ting_openuserstatus_do_renew_loan($userId, $userPincode, $libraryCode, 
   $params['userPincode'] = $userPincode;
   $params['agencyId'] = 'DK-' . $libraryCode;
   $params['outputType'] = 'json';
-
   foreach ($loanIds as $loan) {
-    $params['renewLoan'][] = array(
-      'orderId' => $loan['loanId'],
-    );
+    $params['loanId'][] = $loan['loanId'];
   }
-
   return ting_openuserstatus_do_request($params);
 }
 
