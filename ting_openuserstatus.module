@@ -91,11 +91,10 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
   foreach ($updateOrders as $order) {
     $params['updateOrder'][] = array(
       'orderId' => $order['orderId'],
-      'pickupAgency' => $order['pickupAgency'],
+      'pickUpAgency' => $order['pickUpAgency'],
       'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
     );
   }
-
   return ting_openuserstatus_do_request($params);
 }
 
