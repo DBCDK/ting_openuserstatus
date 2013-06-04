@@ -13,6 +13,7 @@ class OpenUserstatusRequest extends TingClientRequest {
   protected $updateOrder;
   protected $cancelOrder;
   protected $renewLoan;
+  public $loanId;
   
   public function getUpdateOrder() {
     return $this->updateOrder;
@@ -94,11 +95,25 @@ class OpenUserstatusRequest extends TingClientRequest {
   }
 
   /**
+   * @param mixed $loanId
+   */
+  public function setLoanId($loanId) {
+    $this->loanId = $loanId;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getLoanId() {
+    return $this->loanId;
+  }
+
+  /**
    * @return $this
    */
   public function getRequest() {
    // $this->setParameter('action', 'getUserStatusRequest');
-    $params = array('action', 'userId', 'userPincode', 'agencyId', 'outputType', 'updateOrder', 'renewLoan', 'cancelOrder');
+    $params = array('action', 'userId', 'userPincode', 'agencyId', 'loanId', 'outputType', 'updateOrder', 'renewLoan', 'cancelOrder');
     foreach ($params as $parameter) {
       $getter = 'get' . ucfirst($parameter);
       if ($value = $this->$getter()) {
