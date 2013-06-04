@@ -127,7 +127,9 @@ function ting_openuserstatus_check_params(array $params) {
  * Check if an error was returned from webservice
  * @param stdObject $response; the json response from webservice
  * 
- * possible values (@see http://openuserstatus.addi.dk/1.1/openuserstatus.xsd)
+ * possible values (
+ * @return bool
+ * @see http://openuserstatus.addi.dk/1.1/openuserstatus.xsd)
   authentication_error
   Service unavailable
   Element rule violated
