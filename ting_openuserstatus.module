@@ -98,6 +98,14 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
   return ting_openuserstatus_do_request($params);
 }
 
+/**
+ *
+ * @param string $userId
+ * @param string $userPincode
+ * @param string $libraryCode
+ * @param array $loanIds
+ * @return array; 
+ */
 function ting_openuserstatus_do_renew_loan($userId, $userPincode, $libraryCode, array $loanIds) {
   $params['action'] = 'renewLoanRequest';
   $params['userId'] = $userId;
