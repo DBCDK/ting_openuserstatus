@@ -112,7 +112,6 @@ class OpenUserstatusRequest extends TingClientRequest {
    * @return $this
    */
   public function getRequest() {
-   // $this->setParameter('action', 'getUserStatusRequest');
     $params = array('action', 'userId', 'userPincode', 'agencyId', 'loanId', 'outputType', 'updateOrder', 'renewLoan', 'cancelOrder');
     foreach ($params as $parameter) {
       $getter = 'get' . ucfirst($parameter);
