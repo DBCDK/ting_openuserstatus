@@ -9,3 +9,5 @@ files[] = includes/ting_openuserstatus.request.inc
 files[] = ting_openuserstatus.test
 
 dependencies[] = ting_client
+
+configure = admin/config/serviceclient/settings
