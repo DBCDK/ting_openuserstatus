@@ -87,12 +87,11 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
   $params['userPincode'] = $userPincode;
   $params['agencyId'] = 'DK-' . $libraryCode;
   $params['outputType'] = 'json';
-
   foreach ($updateOrders as $order) {
     $params['updateOrder'][] = array(
       'orderId' => $order['orderId'],
-      'pickUpAgency' => $order['pickUpAgency'],
-      'pickupAgencySubdivision' => isset($order['pickupAgencySubdivision']) ? $order['pickupAgencySubdivision'] : NULL,
+      'pickUpAgency' => 'DK-' . $order['pickUpAgency'],
+      'pickUpAgencySubdivision' => isset($order['pickUpAgencySubdivision']) ? $order['pickUpAgencySubdivision'] : NULL,
     );
   }
   return ting_openuserstatus_do_request($params);
