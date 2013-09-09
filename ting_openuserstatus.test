@@ -1,10 +1,10 @@
 <?php
 /**
  * A few unit tests for the ting_openuserstatus module
- *  
+ *
  */
 
-class TingOpenUserStatusUnitTest extends DrupalUnitTestCase{
+class TingOpenUserStatusUnitTest extends DrupalWebTestCase{
   public static function getInfo() {
     return array(
       'name' => t('Ting openuserstatus Unit Test'),
@@ -12,11 +12,11 @@ class TingOpenUserStatusUnitTest extends DrupalUnitTestCase{
       'group' => t('Bibliotek.dk - OpenUserstatus'),
     );
   }
-  
+
    public function setUp() {
     parent::setUp('ting_openuserstatus');
   }
-  
+
   public function test_bad_params() {
     $params = array();
     $result = ting_openuserstatus_do_request($params);
@@ -32,13 +32,13 @@ class TingOpenUserStatusUnitTest extends DrupalUnitTestCase{
     // and again
     $params = array('agencyId'=>'HEST','userId'=>'1234');
     $result = ting_openuserstatus_do_request($params);
-    $this->assertTrue(!empty($result['error']),'Error return for missing userPincode');    
+    $this->assertTrue(!empty($result['error']),'Error return for missing userPincode');
   }
-  
+
   public function test_good_params() {
     $params = array('userId'=>'HEST','userPincode'=>'1234','agencyId'=>'123456');
     $result = ting_openuserstatus_check_params($params);
-    $this->assertTrue(empty($result['error']),'No errors returned for correct parameters');    
+    $this->assertTrue(empty($result['error']),'No errors returned for correct parameters');
   }
 }
 
