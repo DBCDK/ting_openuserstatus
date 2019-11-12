@@ -10,9 +10,9 @@ module_load_include('inc', 'ting_openuserstatus', 'includes/ting_openuserstatus.
  * */
 function ting_openuserstatus_ting_client_webservice() {
   $ret = array();
-  $ret['openuserstatus']['class'] = 'OpenUserstatusRequest';
-  $ret['openuserstatus']['url'] = 'openuserstatus_url';
-  $ret['openuserstatus']['xsdNamespace'] = array('http://oss.dbc.dk/ns/openuserstatus');
+  $ret['OpenUserstatusRequest']['class'] = 'OpenUserstatusRequest';
+  $ret['OpenUserstatusRequest']['url'] = 'OpenUserstatusRequest_url';
+  $ret['OpenUserstatusRequest']['xsdNamespace'] = array('http://oss.dbc.dk/ns/openuserstatus');
   return $ret;
 }
 
@@ -22,16 +22,16 @@ function ting_openuserstatus_ting_client_webservice() {
  * @return array
  */
 function ting_openuserstatus_how_r_u() {
-  return array('openuserstatus' => variable_get('openuserstatus_url'));
+  return array('openuserstatus' => variable_get('OpenUserstatusRequest_url'));
 }
 
 /**
- * do a userStatusRequest 
+ * do a userStatusRequest
  * @param string userId; userid for library
  * @param string userPincode; pincode for library
- * @param string libraryCode; 
- * 
- * return mixed; result of query
+ * @param string libraryCode;
+ *
+ * @return mixed; result of query
  */
 function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) {
   $params['action'] = 'getUserStatusRequest';
@@ -49,7 +49,7 @@ function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) 
 
 /**
  * do a cancelOrderRequest
- * 
+ *
  * @param type $userId
  * @param type $userPincode
  * @param type $libraryCode
@@ -75,11 +75,11 @@ function ting_openuserstatus_do_cancelorder($userId, $userPincode, $libraryCode,
 
 /**
  *
- * @param string $userId; 
+ * @param string $userId;
  * @param string $userPincode
  * @param string $libraryCode
  * @param array $updateOrders
- * @return array; 
+ * @return array;
  */
 function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode, array $updateOrders) {
   $params['action'] = 'updateOrderRequest';
@@ -103,7 +103,7 @@ function ting_openuserstatus_do_update_order($userId, $userPincode, $libraryCode
  * @param string $userPincode
  * @param string $libraryCode
  * @param array $loanIds
- * @return array; 
+ * @return array;
  */
 function ting_openuserstatus_do_renew_loan($userId, $userPincode, $libraryCode, array $loanIds) {
   $params['action'] = 'renewLoanRequest';
@@ -133,7 +133,7 @@ function ting_openuserstatus_check_params(array $params) {
 /**
  * Check if an error was returned from webservice
  * @param stdObject $response; the json response from webservice
- * 
+ *
  * possible values (
  * @return bool
  * @see http://openuserstatus.addi.dk/1.1/openuserstatus.xsd)
@@ -178,7 +178,7 @@ function ting_openuserstatus_do_request($params) {
 
   // no errors in parameters; do the request
   $client = new ting_client_class();
-  $response = $client->do_request('openuserstatus', $params);
+  $response = $client->do_request('OpenUserstatusRequest', $params);
   $params['response'] = $response;
 
   // more error handling
