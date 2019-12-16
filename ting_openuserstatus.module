@@ -50,9 +50,9 @@ function ting_openuserstatus_do_userstatus($userId, $userPincode, $libraryCode) 
 /**
  * do a cancelOrderRequest
  *
- * @param type $userId
- * @param type $userPincode
- * @param type $libraryCode
+ * @param string $userId
+ * @param string $userPincode
+ * @param string $libraryCode
  * @param array $orders [orderId, orderType]; one or more orders to cancel
  * @return array
  */
