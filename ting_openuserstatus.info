@@ -5,7 +5,7 @@ core = 7.x
 version = 7.x-0.2
 
 files[] = includes/ting_openuserstatus.admin.inc
-files[] = includes/ting_openuserstatus.request.inc
+files[] = includes/OpenUserstatusRequest.php
 files[] = ting_openuserstatus.test
 
 dependencies[] = ting_client
