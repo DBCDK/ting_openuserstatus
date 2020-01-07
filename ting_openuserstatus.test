@@ -9,7 +9,7 @@ class TingOpenUserStatusUnitTest extends DrupalWebTestCase{
     return array(
       'name' => t('Ting openuserstatus Unit Test'),
       'description' => t('Unittest ting OpenUserstatus'),
-      'group' => t('Bibliotek.dk - OpenUserstatus'),
+      'group' => t('FIX ME')//t('Bibliotek.dk - OpenUserstatus'),
     );
   }
 
